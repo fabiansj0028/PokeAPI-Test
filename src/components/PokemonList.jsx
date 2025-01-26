@@ -44,8 +44,8 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
   /**
    * Handle click event on a Pokémon list item.
    */
-  const handleClick = (name) => {
-    setCurrentPokemon(name);
+  const handleClick = (pokemon) => {
+    setCurrentPokemon(pokemon);
   };
 
   /**
@@ -82,9 +82,9 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
 
           return (
             <li
-              key={pokemon.name}
+              key={pokemonId}
               className={`pokemon-item ${isActive ? "active" : ""}`}
-              onClick={() => handleClick(pokemon.name)}
+              onClick={() => handleClick(pokemon)}
             >
               <div className="pokemon-identifier">
                 <img
