@@ -75,7 +75,7 @@ export default function PokemonEvolutions({ pokemonSpecies }) {
               <p>{capitalizeFirstLetter(pokemon.name)}</p>
             </div>
             {pokemon !== evolutionChain[evolutionChain.length - 1] && (
-              <span>&rarr;</span>
+              <span className="evolution-arrow">&rarr;</span>
             )}
           </>
         ))}
