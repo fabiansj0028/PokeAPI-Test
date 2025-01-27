@@ -12,8 +12,8 @@ A simple React application to search for Pokémon and view their details.
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/fabiansj0028/PokeAPI-Test.git
+   cd PokeAPI-Test
 2. Install dependencies:
 
    ```bash
