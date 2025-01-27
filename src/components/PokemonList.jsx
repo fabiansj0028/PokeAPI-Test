@@ -40,7 +40,14 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
   useEffect(() => {
     fetchPokemonBatch();
   }, []);
-
+  
+  // Set current Pokémon to the first one in the list
+    useEffect(() => {
+        if (pokemonList.length > 0) {
+        setCurrentPokemon(pokemonList[0]);
+        }
+    }, [pokemonList, setCurrentPokemon]);
+    
   /**
    * Handle click event on a Pokémon list item.
    */
@@ -78,7 +85,7 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
           const pokemonId = index + 1; 
 
           // Check if the current Pokémon is active
-          const isActive = currentPokemon === pokemon.name;
+          const isActive = currentPokemon === pokemon;
 
           return (
             <li
