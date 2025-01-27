@@ -10,11 +10,15 @@ export default function PokemonInfo({ pokemonData, pokemonSpecies }) {
   const [genus, setGenus] = useState(null);
   const [eggGroups, setEggGroups] = useState(null);
 
+  // Update the genus and egg groups when the species data is loaded
   useEffect(() => {
     if (pokemonSpecies) {
+      // Find the English genus name and capitalize it for display
       setGenus(
         pokemonSpecies.genera.find((genus) => genus.language.name === "en")
       );
+
+      // Capitalize the egg group names for display
       setEggGroups(
         pokemonSpecies.egg_groups.map((group) =>
           capitalizeFirstLetter(group.name)

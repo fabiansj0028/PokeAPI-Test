@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import { capitalizeFirstLetter } from "../utils/textFormatter";
 import "../styles/PokemonList.css";
 
-export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
+export default function PokemonList({
+  currentPokemon,
+  setCurrentPokemon,
+  searchTerm, // Receive search term as a prop
+}) {
   const [pokemonList, setPokemonList] = useState([]);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  const [isFetching, setIsFetching] = useState(false); // Nuevo estado para evitar múltiples fetchs
+  const [isFetching, setIsFetching] = useState(false); // New state to prevent multiple fetches
   const sidebarRef = useRef(null);
   const initialLoad = useRef(false);
 
@@ -39,13 +43,12 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
       console.error("Error fetching Pokémon batch:", error);
     } finally {
       // Always set fetching flag to false after the request
-      setIsFetching(false); 
+      setIsFetching(false);
     }
   };
 
   // Fetch the first batch of Pokémon on initial load
   useEffect(() => {
-    // Skip the initial fetch on first render
     if (!initialLoad.current) {
       initialLoad.current = true;
       fetchPokemonBatch();
@@ -54,10 +57,15 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
 
   // Set the first Pokémon as the current one when the list is loaded
   useEffect(() => {
-    if (pokemonList.length > 0) {
+    if (pokemonList.length > 0 && !currentPokemon) {
       setCurrentPokemon(pokemonList[0]);
     }
   }, [pokemonList, setCurrentPokemon]);
+
+  // Filter Pokémon by the search term
+  const filteredPokemonList = pokemonList.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   // Handle the click event on a Pokémon item
   const handleClick = (pokemon) => {
@@ -77,8 +85,8 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
   return (
     <aside className="sidebar" ref={sidebarRef} onScroll={handleScroll}>
       <ul className="pokemon-list">
-        {pokemonList.map((pokemon, index) => {
-          const pokemonId = index + 1;
+        {filteredPokemonList.map((pokemon, index) => {
+          const pokemonId = pokemonList.indexOf(pokemon) + 1; // Calculate the actual ID
           const isActive = currentPokemon === pokemon;
 
           return (

@@ -52,3 +52,46 @@ hr {
   width: 95%;
   border: 1px solid #fe8484;
 }
+
+.search-container {
+  position: absolute;
+  top: 3rem;
+  right: 3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-input {
+  width: 0;
+  padding: 0.5rem;
+  border: 0;
+  background-color: #f9e6e6;
+  color: black;
+  border-radius: 5px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input:focus,
+.search-input.active {
+  width: 200px;
+  opacity: 1;
+}
+
+.search-icon {
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  color: #f08080;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.search-icon:hover {
+  transform: scale(1.2);
+  color: black;
+}
