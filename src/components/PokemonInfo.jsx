@@ -6,31 +6,23 @@ import {
 import { capitalizeFirstLetter } from "../utils/textFormatter";
 import "../styles/PokemonInfo.css";
 
-export default function PokemonInfo({ pokemonData }) {
+export default function PokemonInfo({ pokemonData, pokemonSpecies }) {
   const [genus, setGenus] = useState(null);
   const [eggGroups, setEggGroups] = useState(null);
 
-  // Fetch species data for the selected Pokémon
   useEffect(() => {
-    if (pokemonData) {
-      fetch(pokemonData.species.url)
-        .then((response) => response.json())
-        .then((data) => {
-          // Find the English genus name
-          setGenus(data.genera.find((genus) => genus.language.name === "en"));
-
-          // Set the egg groups
-          setEggGroups(
-            data.egg_groups.map((eggGroup) =>
-              capitalizeFirstLetter(eggGroup.name)
-            )
-          );
-        })
-        .catch((error) => {
-          console.error("Error fetching Pokémon species data:", error);
-        });
+    if (pokemonSpecies) {
+      setGenus(
+        pokemonSpecies.genera.find((genus) => genus.language.name === "en")
+      );
+      setEggGroups(
+        pokemonSpecies.egg_groups.map((group) =>
+          capitalizeFirstLetter(group.name)
+        )
+      );
     }
-  }, [pokemonData]);
+  }, [pokemonSpecies]);
+
   return (
     <>
       {pokemonData ? (
