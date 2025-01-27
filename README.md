@@ -21,3 +21,6 @@ A simple React application to search for Pokémon and view their details.
 3. Run the development server:
    ```bash
    npm run dev
+4. Open the url
+  ```bash
+   http://localhost:5173/
