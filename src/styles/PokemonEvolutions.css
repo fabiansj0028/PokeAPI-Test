@@ -1,0 +1,28 @@
+.pokemon-evolutions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  color: black;
+}
+
+.evolution-chain {
+  display: flex;
+  gap: 3rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.evolution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.evolution img {
+  width: 150px;
+  height: 150px;
+}
