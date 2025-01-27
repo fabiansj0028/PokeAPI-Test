@@ -3,19 +3,23 @@ import { capitalizeFirstLetter } from "../utils/textFormatter";
 import "../styles/PokemonList.css";
 
 export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
-
   const [pokemonList, setPokemonList] = useState([]);
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [isFetching, setIsFetching] = useState(false); // Nuevo estado para evitar múltiples fetchs
   const sidebarRef = useRef(null);
+  const initialLoad = useRef(false);
 
-  
   /**
    * Fetch a batch of Pokémon from the API.
    */
   const fetchPokemonBatch = async () => {
+    if (isFetching) return; // If already fetching, skip the new request
+
+    setIsFetching(true); // Set fetching flag to true
+
     try {
-      const limit = 20; 
+      const limit = 50;
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
       );
@@ -24,67 +28,57 @@ export default function PokemonList({ currentPokemon, setCurrentPokemon }) {
       // Append the new results to the existing list
       setPokemonList((prevList) => [...prevList, ...data.results]);
 
-      // If there's no next page in the response, we've reached the end
+      // If there are no more results, stop fetching
       if (!data.next) {
         setHasMore(false);
       }
 
-      // Update offset for the next batch
+      // Update the offset for the next batch
       setOffset((prevOffset) => prevOffset + limit);
     } catch (error) {
       console.error("Error fetching Pokémon batch:", error);
+    } finally {
+      // Always set fetching flag to false after the request
+      setIsFetching(false); 
     }
   };
 
-  // Initial load
+  // Fetch the first batch of Pokémon on initial load
   useEffect(() => {
-    fetchPokemonBatch();
+    // Skip the initial fetch on first render
+    if (!initialLoad.current) {
+      initialLoad.current = true;
+      fetchPokemonBatch();
+    }
   }, []);
-  
-  // Set current Pokémon to the first one in the list
-    useEffect(() => {
-        if (pokemonList.length > 0) {
-        setCurrentPokemon(pokemonList[0]);
-        }
-    }, [pokemonList, setCurrentPokemon]);
-    
-  /**
-   * Handle click event on a Pokémon list item.
-   */
+
+  // Set the first Pokémon as the current one when the list is loaded
+  useEffect(() => {
+    if (pokemonList.length > 0) {
+      setCurrentPokemon(pokemonList[0]);
+    }
+  }, [pokemonList, setCurrentPokemon]);
+
+  // Handle the click event on a Pokémon item
   const handleClick = (pokemon) => {
     setCurrentPokemon(pokemon);
   };
 
-  /**
-   * Detect when the sidebar is scrolled to the bottom.
-   * @param {*} e 
-   */
+  // Handle the scroll event on the sidebar
   const handleScroll = (e) => {
     const element = e.currentTarget;
     const { scrollTop, scrollHeight, clientHeight } = element;
 
-    // If the user has scrolled to the bottom of the sidebar
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-        // Fetch more Pokémon if there are more to fetch
-        if (hasMore) {
-        fetchPokemonBatch();
-      }
+    if (scrollTop + clientHeight >= scrollHeight - 5 && hasMore && !isFetching) {
+      fetchPokemonBatch();
     }
   };
 
   return (
-    <aside
-      className="sidebar"
-      ref={sidebarRef}
-      onScroll={handleScroll}
-    >
+    <aside className="sidebar" ref={sidebarRef} onScroll={handleScroll}>
       <ul className="pokemon-list">
         {pokemonList.map((pokemon, index) => {
-          
-          // The Pokémon ID is the index + 1
-          const pokemonId = index + 1; 
-
-          // Check if the current Pokémon is active
+          const pokemonId = index + 1;
           const isActive = currentPokemon === pokemon;
 
           return (
